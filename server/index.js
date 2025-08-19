@@ -5,7 +5,7 @@ import indexroutes from './routes/indexroutes.js';
 dotenv.config();
 const app = express();
 app.use(express.json());
-app.use("/user",indexroutes);
+app.use("/api/v1",indexroutes);
 
 
 
