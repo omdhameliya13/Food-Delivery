@@ -1,7 +1,22 @@
 import express from 'express';
+import multer from 'multer';
 const router = express.Router();
-import { addItem } from '../../controller/HomeChef/menu.js';
+import { addItem,getItems,getItemsById,updateItem,deleteItem } from '../../controller/HomeChef/menu.js';
+import {auth} from '../../middleware/authmiddleware.js';
 
-router.post("/addItem",addItem);
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+const upload = multer({ storage });
 
+router.post("/items/addItem",auth,upload.single('image'),addItem);
+router.get("/items/getItems",auth,getItems);
+router.get("/items/getItemsById/:chefId",auth,getItemsById);
+router.put("/items/updateItem/:id",auth,upload.single('image'),updateItem);
+router.delete("/items/deleteItem/:id",auth,deleteItem)
 export default router;

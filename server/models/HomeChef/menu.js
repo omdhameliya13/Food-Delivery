@@ -10,6 +10,10 @@ const menu = new mongoose.Schema({
         type:String,
         required:true
     },
+    image:{
+        type:String,
+        required:true
+    },
     description:{
         type:String,
         required:true
@@ -27,6 +31,8 @@ const menu = new mongoose.Schema({
         default: Date.now,
     }
 ,});
+
+menu.index({ chefId: 1, name: 1 }, { unique: true });
 
 const Menu = mongoose.model("Menu",menu);
 

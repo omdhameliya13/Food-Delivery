@@ -7,6 +7,7 @@ const app = express();
 app.use(express.json());
 app.use("/api/v1",indexroutes);
 
-mongoose.connect(process.env.MONGO_URL).then(()=>{console.log("MongoDB Connected")}).catch((error)=>{console.log(error.message())});
+mongoose.connect(process.env.MONGO_URL)
+.then(()=>{app.listen(process.env.PORT,()=>{console.log(`Server started on PORT : ${process.env.PORT}`)}),console.log("MongoDB Connected")})
+.catch((error)=>{console.log(error.message())});
 
-app.listen(process.env.PORT,()=>{console.log(`Server started on PORT : ${process.env.PORT}`)});
