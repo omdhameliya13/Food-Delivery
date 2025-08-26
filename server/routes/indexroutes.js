@@ -4,10 +4,13 @@ import homechefauth from "./HomeChef/authroutes.js";
 import userauth from "./User/authroutes.js";
 import adminauth from "./admin/authroutes.js";
 import menu from "./HomeChef/menuroutes.js";
+import cart from "./User/cart.js";
 
 
 router.use("/homechef/auth",homechefauth);
 router.use("/homechef/menu",menu);
 router.use("/user/auth",userauth);
 router.use("/admin/auth",adminauth);
+router.use("/user/cart",cart);
+
 export default router;
