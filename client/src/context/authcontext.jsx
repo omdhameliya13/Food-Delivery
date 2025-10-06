@@ -1,9 +1,9 @@
 import { createContext, useState, useEffect } from "react";
 import { loginUser, registerUser } from "../api/user.jsx";
 import { loginAdmin, registerAdmin } from "../api/admin.jsx";
-import { loginHomechef, registerHomechef } from "../api/homechef.jsx"; 
+import { loginChef, registerChef } from "../api/homechef.jsx"; 
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -14,6 +14,10 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (credentials, role) => {
+    // Backward compatibility: allow single form object with role inside
+    if (typeof role === "undefined" && credentials && credentials.role) {
+      role = credentials.role;
+    }
     let data;
     if (role === "admin") {
       data = await loginAdmin(credentials);
@@ -31,6 +35,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (formData, role) => {
+    // Backward compatibility: allow single form object with role inside
+    if (typeof role === "undefined" && formData && formData.role) {
+      role = formData.role;
+    }
     if (role === "admin") {
       await registerAdmin(formData);
     } else if (role === "user") {

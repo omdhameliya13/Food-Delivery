@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import { addToCart as apiAddToCart, getCart as apiGetCart, removeFromCart as apiRemoveFromCart } from "../api/cart.jsx";
 
-const CartContext = createContext();
+export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
