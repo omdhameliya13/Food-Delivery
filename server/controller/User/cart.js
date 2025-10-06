@@ -3,7 +3,8 @@ import Cart from "../../models/User/cart.js";
 
 export const addToCart = async(req,res)=>{
     try {
-        const {userId,itemId,quantity} = req.body;
+        userId = req.user.id;
+        const {itemId,quantity} = req.body;
         let cart = await Cart.findOne({userId});
         if(!cart){
             cart = new Cart({userId,items:[]});
@@ -27,7 +28,7 @@ export const addToCart = async(req,res)=>{
 
 export const getCart = async(req,res)=>{
     try {
-        const {userId} = req.params;
+        const {userId} = req.user.id;
         const cart = await Cart.findOne({userId}).populate("items.itemId");
         if(!cart){
             return res.status(404).json({message:"Your cart is empty"});
@@ -41,7 +42,8 @@ export const getCart = async(req,res)=>{
 
 export const removeFromCart = async(req,res)=>{
     try {
-        const{userId,itemId} = req.body;
+        userId = req.user.id;
+        const{itemId} = req.body;
         const cart = await Cart.findOne({userId});
         if(!cart){
             return res.status(404).json({message:"Your cart is empty"});
