@@ -1,5 +1,8 @@
 import './App.css'
-import { Routes, Route, Link, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider } from './context/authcontext.jsx'
+import { CartProvider } from './context/CartContext.jsx'
+import Navbar from './components/Navbar.jsx'
 
 // User pages
 import Home from './pages/user/Home.jsx'
@@ -7,56 +10,71 @@ import Cart from './pages/user/cart.jsx'
 import Checkout from './pages/user/Checkout.jsx'
 import Orders from './pages/user/Orders.jsx'
 
-// Auth pages
+// User Auth pages
 import Login from './pages/auth/login.jsx'
 import Register from './pages/auth/Register.jsx'
 
-// Admin pages
-import AdminDashboard from './pages/admin/admindashboard.jsx'
-import ManageOrder from './pages/admin/ManageOrder.jsx'
+// Chef Auth pages
+import ChefLogin from './pages/auth/ChefLogin.jsx'
+import ChefRegister from './pages/auth/ChefRegister.jsx'
+
+// Admin Auth pages
+import AdminLogin from './pages/auth/AdminLogin.jsx'
+import AdminRegister from './pages/auth/AdminRegister.jsx'
 
 // Chef pages
-import ChefDashboard from './pages/chef/chefdashboard.jsx'
-import MenuUpload from './pages/chef/MenuUpload.jsx'
+import ChefDashboard from './pages/chef/ChefDashboard.jsx'
+import ChefMenu from './pages/chef/ChefMenu.jsx'
+import ChefOrders from './pages/chef/ChefOrders.jsx'
+
+// Admin pages
+import AdminDashboard from './pages/admin/AdminDashboard.jsx'
+import AdminOrders from './pages/admin/AdminOrders.jsx'
 
 function App() {
   return (
-    <div>
-      <nav style={{ display: 'flex', gap: 12, padding: 12, borderBottom: '1px solid #eee' }}>
-        <Link to="/">Home</Link>
-        <Link to="/cart">Cart</Link>
-        <Link to="/orders">Orders</Link>
-        <Link to="/checkout">Checkout</Link>
-        <span style={{ marginLeft: 'auto' }} />
-        <Link to="/login">Login</Link>
-        <Link to="/register">Register</Link>
-        <Link to="/admin">Admin</Link>
-        <Link to="/chef">Chef</Link>
-      </nav>
-
-      <Routes>
-        {/* User routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/orders" element={<Orders />} />
-
-        {/* Auth routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-
-        {/* Admin routes */}
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/admin/orders" element={<ManageOrder />} />
-
-        {/* Chef routes */}
-        <Route path="/chef" element={<ChefDashboard />} />
-        <Route path="/chef/upload" element={<MenuUpload />} />
-
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </div>
+    <AuthProvider>
+      <CartProvider>
+        <div>
+          <Navbar />
+          
+          <Routes>
+            {/* Public User Routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
+            
+            {/* User Auth Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            
+            {/* User Protected Routes */}
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/orders" element={<Orders />} />
+            
+            {/* Chef Auth Routes */}
+            <Route path="/chef/login" element={<ChefLogin />} />
+            <Route path="/chef/register" element={<ChefRegister />} />
+            
+            {/* Chef Protected Routes */}
+            <Route path="/chef/dashboard" element={<ChefDashboard />} />
+            <Route path="/chef/menu" element={<ChefMenu />} />
+            <Route path="/chef/orders" element={<ChefOrders />} />
+            
+            {/* Admin Auth Routes */}
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/register" element={<AdminRegister />} />
+            
+            {/* Admin Protected Routes */}
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/orders" element={<AdminOrders />} />
+            
+            {/* Fallback */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </div>
+      </CartProvider>
+    </AuthProvider>
   )
 }
 

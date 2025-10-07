@@ -15,8 +15,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.post("/items/addItem",auth,upload.single('image'),addItem);
-router.get("/items/getItems",auth,getItems);
-router.get("/items/getItemsById/:chefId",auth,getItemsById);
+router.get("/items/getItems",getItems);
+router.get("/items/myItems",auth,getItemsById); // Get logged-in chef's items
+router.get("/items/getItemsById/:chefId",getItemsById);
 router.put("/items/updateItem/:id",auth,upload.single('image'),updateItem);
 router.delete("/items/deleteItem/:id",auth,deleteItem)
 export default router;

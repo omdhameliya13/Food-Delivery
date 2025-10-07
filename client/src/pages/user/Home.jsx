@@ -8,14 +8,22 @@ const Home = () => {
   const { addToCart } = useContext(CartContext);
 
   useEffect(() => {
-    api.get("/menus").then((res) => setMenus(res.data));
+    api.get("/homechef/menu/items/getItems")
+      .then((res) => setMenus(res.data))
+      .catch((err) => console.error("Failed to fetch menus:", err));
   }, []);
 
   return (
     <div className="menu-container">
       {menus.map((menu) => (
-        <div key={menu.id} className="menu-card">
-          <img src={menu.image} alt={menu.name} />
+        <div key={menu._id} className="menu-card">
+          <img 
+            src={`http://localhost:5000/uploads/${menu.image}`} 
+            alt={menu.name}
+            onError={(e) => {
+              e.target.src = 'https://via.placeholder.com/300x200?text=No+Image';
+            }}
+          />
           <h3>{menu.name}</h3>
           <p>{menu.description}</p>
           <p className="price">₹{menu.price}</p>

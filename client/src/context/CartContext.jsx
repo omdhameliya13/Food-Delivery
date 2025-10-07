@@ -9,22 +9,51 @@ export const CartProvider = ({ children }) => {
   // Load cart from backend on mount
   useEffect(() => {
     const fetchCart = async () => {
+      // Check if user is logged in
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.log("No token found, skipping cart fetch");
+        return;
+      }
+
       try {
         const { data } = await apiGetCart();
         setCart(data.items || []);  // assuming your backend returns an object with items array
       } catch (error) {
         console.error("Failed to fetch cart", error);
+        // If unauthorized, clear the cart
+        if (error.response?.status === 401) {
+          setCart([]);
+        }
       }
     };
     fetchCart();
   }, []);
 
   const addToCart = async (item) => {
+    // Check if user is logged in
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please login to add items to cart");
+      return;
+    }
+
     try {
-      const { data } = await apiAddToCart(item);
+      // Send correct format: itemId and quantity
+      const { data } = await apiAddToCart({ 
+        itemId: item._id, 
+        quantity: 1 
+      });
       setCart(data.cart.items); // update local cart with backend response
+      alert("Item added to cart successfully!");
     } catch (error) {
       console.error("Failed to add to cart", error);
+      if (error.response?.status === 401) {
+        alert("Your session has expired. Please login again.");
+        localStorage.clear();
+      } else {
+        alert("Failed to add to cart: " + (error.response?.data?.message || error.message));
+      }
     }
   };
 

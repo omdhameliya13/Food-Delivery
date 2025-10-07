@@ -18,20 +18,29 @@ export const AuthProvider = ({ children }) => {
     if (typeof role === "undefined" && credentials && credentials.role) {
       role = credentials.role;
     }
-    let data;
+    let response;
     if (role === "admin") {
-      data = await loginAdmin(credentials);
+      response = await loginAdmin(credentials);
     } else if (role === "user") {
-      data = await loginUser(credentials);
-    } else if (role === "homechef") {
-      data = await loginHomechef(credentials);
+      response = await loginUser(credentials);
+    } else if (role === "homechef" || role === "chef") {
+      response = await loginChef(credentials);
     } else {
       throw new Error("Invalid role");
     }
 
-    localStorage.setItem("token", data.token);
+    // Handle response - could be response.data.token or response.token
+    const token = response.data?.token || response.token;
+    
+    if (!token) {
+      throw new Error("No token received from server");
+    }
+
+    localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify({ email: credentials.email, role }));
     setUser({ email: credentials.email, role });
+    
+    return response;
   };
 
   const register = async (formData, role) => {
@@ -43,8 +52,8 @@ export const AuthProvider = ({ children }) => {
       await registerAdmin(formData);
     } else if (role === "user") {
       await registerUser(formData);
-    } else if (role === "homechef") {
-      await registerHomechef(formData);
+    } else if (role === "homechef" || role === "chef") {
+      await registerChef(formData);
     } else {
       throw new Error("Invalid role");
     }

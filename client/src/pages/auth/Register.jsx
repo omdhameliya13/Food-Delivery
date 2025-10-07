@@ -1,10 +1,12 @@
 import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import "../../styles/auth.css";
 
 const Register = () => {
   const { register } = useContext(AuthContext);
-  const [form, setForm] = useState({ name: "", email: "", password: "", role: "" });
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ name: "", email: "", password: "", role: "user" });
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -14,9 +16,9 @@ const Register = () => {
     try {
       await register(form);
       alert("User registered successfully!");
-      window.location.href = "/login";
+      navigate("/login");
     } catch (err) {
-      alert("Registration failed: " + err.response?.data?.message);
+      alert("Registration failed: " + (err.response?.data?.message || err.message));
     }
   };
 

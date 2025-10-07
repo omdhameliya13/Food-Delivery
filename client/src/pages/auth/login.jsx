@@ -1,9 +1,11 @@
 import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import "../../styles/auth.css";
 
 const Login = () => {
   const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "", role: "user" });
 
   const handleChange = (e) =>
@@ -14,9 +16,9 @@ const Login = () => {
     try {
       await login(form);
       alert("Login successful!");
-      window.location.href = "/";
+      navigate("/");
     } catch (err) {
-      alert("Login failed: " + err.response?.data?.message);
+      alert("Login failed: " + (err.response?.data?.message || err.message));
     }
   };
 

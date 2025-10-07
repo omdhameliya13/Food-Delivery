@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000/api/user", // ✅ prefix for your user routes
+  baseURL: "http://localhost:5000/api/v1", // Base API URL
+  withCredentials: true, // Enable sending cookies and credentials
 });
 
 api.interceptors.request.use((config) => {

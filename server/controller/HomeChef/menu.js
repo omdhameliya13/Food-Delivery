@@ -41,14 +41,17 @@ export const getItems = async(req,res)=>{
 
 export const getItemsById = async(req,res)=>{
     try {
-        const {chefId} = req.params;
-        const items = await menu.find({chefId});
-        if(!items)
-        {
-            return res.status(404).json({message:"Item not found"});
+        // If chefId is in params, use it; otherwise use logged-in chef's ID
+        const chefId = req.params.chefId || req.user?.id;
+        
+        if (!chefId) {
+            return res.status(400).json({message:"Chef ID required"});
         }
+        
+        const items = await menu.find({chefId});
         return res.status(200).json(items);
     } catch (error) {
+        console.error(error);
         return res.status(500).json({message:"Server error"});
     }
 }
@@ -57,7 +60,6 @@ export const updateItem = async(req,res)=>{
     try {
         const {name,description,price,available,date} = req.body;
         const updateData = {name,description,price,available,date};
-        //const image = req.file ? req.file.filename : null;
         if(req.file){
             updateData.image = req.file.filename;
         }
